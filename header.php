@@ -1,7 +1,8 @@
 <html>
 <head>
-	<title>Login page</title>
+	<title><?php echo $page_title; ?></title>
 </head>
+
 
 <?php
 	//tõstame teise faili sisu siia
@@ -9,3 +10,4 @@
 		
 
 ?>
+</html>

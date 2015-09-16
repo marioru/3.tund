@@ -7,79 +7,129 @@
 	$surename_error = "";
 	$username_error = "";
 	
-	//echo $_POST€["email"];
+	$mail_error = "";
+	$passwordtwo_error = "";
+	
+	//muutjuad ab vÃ¤Ã¤rtuste jaoks
+	$name = "";
+	
+	//echo $_POSTâ‚¬["email"];
 	
 	//kontrollime et keegi vajutas nuppu
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		
-			//echo "keegi vajutas nuppu";
+		//echo "keegi vajutas nuppu";
+		
+		//vajutas login nuppu
+		if(isset($_POST["login"])){
 			
-			//kontrollin et e-post ei ole tühi
+			echo "vajutas login nuppu!";
+			
+			//kontrollin et e-post ei ole tÃ¼hi
 			
 			if ( empty($_POST["email"]) ) {
-				$email_error = "See väli on kohustuslik";
+				$email_error = "See vÃ¤li on kohustuslik";
 				
 			}
 			
-			//kontrollin et parool ei ole tühi
+			//kontrollin et parool ei ole tÃ¼hi
 			 if ( empty($_POST["password"]) ) {
-				 $password_error = "See väli on kohustuslik";
+				 $password_error = "See vÃ¤li on kohustuslik";
 			} else {
 				
-				//kui oleme siia jõudnud, siis parool ei ole tühi
-				//konrollin et oleks vähemalt 8 üsmbolit pikk
+				//kui oleme siia jÃµudnud, siis parool ei ole tÃ¼hi
+				//konrollin et oleks vÃ¤hemalt 8 Ã¼smbolit pikk
 				if(strlen($_POST["password"]) < 8) {
 					
-					$password_error = "Peab olema vähemalt 8 tähemärki pikk!";
+					$password_error = "Peab olema vÃ¤hemalt 8 tÃ¤hemÃ¤rki pikk!";
 					}
 			}
+		
+		
+		//kontrollime et keegi vajutas nuppu
+		}elseif(isset($_POST["create"])){
 			
-			//kontrollin et nimi ja perekonnanime väljad ei oleks tühjad
+			echo "vajutas create nuppu!";
+			
+			//kontrollin et nimi ja perekonnanime vÃ¤ljad ei oleks tÃ¼hjad
 			if ( empty($_POST["name"]) ) {
-				$name_error = "See väli on kohustuslik";
+				$name_error = "See vÃ¤li on kohustuslik";
+			}else{
+				//kÃµik korras
+				//test_input eemaldab pahatahtlikud osad
+				$name = test_input($_POST["name"]);
 				
 			}
+			if($name_error == ""){
+				echo "salvestan ab'i ".$name;
+			}
+				
 			if ( empty($_POST["surename"]) ) {
-				$surename_error = "See väli on kohustuslik";
+				$surename_error = "See vÃ¤li on kohustuslik";
 				
 			}
-			//kontrooli et kasutajanimi ei oleks tühi ja et see oleks vährmalt 3 tähemärki pikk
+			//kontrooli et kasutajanimi ei oleks tÃ¼hi ja et see oleks vÃ¤hrmalt 3 tÃ¤hemÃ¤rki pikk
 			if ( empty($_POST["username"]) ) {
-				$username_error = "See väli on kohustuslik";
+				$username_error = "See vÃ¤li on kohustuslik";
 				
 			} else {
 				
 				if(strlen($_POST["username"]) < 3) {
 					
-					$username_error = "Peab olema vähemalt 3 tähemärki pikk!";
+					$username_error = "Peab olema vÃ¤hemalt 3 tÃ¤hemÃ¤rki pikk!";
 					}
 			}
-			
+			if (empty($_POST["email"])) {
+				$mail_error = "See vÃ¤li on kohustuslik";
+			}
+			if (empty($_POST["password"])) {
+				$passwordtwo_error = "See vÃ¤li on kohustuslik";
+			}
+		
+		}
 	}
+			
+function test_input($data) {
+	//vÃµtab Ã¤ra tÃ¼hikud,enterid,tabid
+  $data = trim($data);
+  //tagurpidi kaltkriipsud
+  $data = stripslashes($data);
+  //teeb html'i tekstiks <lÃ¤hrb &lt;
+  $data = htmlspecialchars($data);
+  return $data;
+}
+	
+	
 ?>
 
-<html>
+<?php
+	$page_title = "Sisselgimis leht";
+	$page_file_name = "login.php";
+?>
+
 <?php require_once("../header.php"); ?>
 
-<body bgcolor="99FFCC">
+
+
+<body bgcolor="E0FFF0">
 
 	<h2>Log in</h2>
+
 		
 	  <form action="login.php" method="post">	
 		<input name="email" type="email" placeholder="E-post"> <?php echo $email_error;?><br><br>
 		<input name="password" type="password" placeholder="Parool"> <?php echo $password_error;?><br><br>
-		<input type="submit" value="Log in">
+		<input name="login" type="submit" value="Log in">
 	  </form>	
 	<h2>Create user</h2>
 	
-		<form action="Create user.php" method="post">	
-		<input name="name" type="name" placeholder="Eesnimi"><?php echo $name_error;?>&nbsp;&nbsp;&nbsp;&nbsp;<input name="username" type="username" placeholder="Kasutajanimi"><?php echo $username_error;?> <br><br>
-		<input name="surename" type="surename" placeholder="Perekonnanimi"><?php echo $surename_error;?>&nbsp;&nbsp;&nbsp;&nbsp;<input name="password" type="password" placeholder="Parool"> <?php echo $password_error;?> <br><br>
-		<input name="email" type="email" placeholder="E-post"> <?php echo $email_error;?><br><br>
-		<input type="submit" value="Create user">
+		<form action="login.php" method="post">	
+		<input name="name" type="name" value="<?php echo $name; ?>" placeholder="Eesnimi"><?php echo $name_error;?>&nbsp;&nbsp;&nbsp;&nbsp;<input name="username" type="username" placeholder="Kasutajanimi"><?php echo $username_error;?> <br><br>
+		<input name="surename" type="surename" placeholder="Perekonnanimi"><?php echo $surename_error;?>&nbsp;&nbsp;&nbsp;&nbsp;<input name="password" type="password" placeholder="Parool"> <?php echo $passwordtwo_error;?> <br><br>
+		<input name="email" type="email" placeholder="E-post"> <?php echo $mail_error;?><br><br>
+		<input name="create" type="submit" value="Create user">
 	  </form>	
 </body>
 
 
 <?php require_once("../footer.php"); ?>
-</html>
